@@ -1,0 +1,130 @@
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Auditor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            padding-top: 5rem;
+        }
+        .main-container { 
+            padding-top: 1.5rem;
+            padding-right: 2rem;
+            padding-left: 2rem;
+        }
+        .navbar .container-fluid {
+            padding-right: 2rem;
+            padding-left: 2rem;
+        }
+        .navbar {
+            border-bottom: 1px solid #495057;
+        }
+        /* New styles for navbar menu items */
+        .navbar-nav .nav-item {
+            border-right: 1px solid #495057;
+        }
+        .navbar-nav .nav-item:last-child {
+            border-right: none;
+        }
+        .navbar-nav .nav-link {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        #html-input { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; }
+        #html-input:disabled { background-color: var(--bs-tertiary-bg); }
+        #results-panel .accordion-button:not(.collapsed) { color: #fff; }
+        #results-panel .accordion-button:focus { box-shadow: none; }
+        #results-panel .accordion-header > div.accordion-button { cursor: default; }
+        .badge { font-size: 0.8em; }
+        .table-responsive { max-height: 400px; overflow-y: auto; }
+        #refactored-code { font-family: 'Courier New', Courier, monospace; font-size: 0.85rem; }
+        .spinner-border { width: 1.5rem; height: 1.5rem; }
+        #refactor-button .bi-magic { vertical-align: -0.125em; }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">UT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Auditor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../schedule-generator/index.html">Schedule Generator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../decimal-time-converter/index.html">Decimal Time Converter</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+ 
+    <div class="container-fluid main-container">
+ 
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    <label for="sc-cid-input" class="form-label">Specific `sc_cid` Value</label>
+                    <input type="text" class="form-control" id="sc-cid-input" placeholder="This field is required to proceed" required>
+                </div>
+                <div class="mb-3">
+                    <label for="html-input" class="form-label">Paste Full Email HTML Code</label>
+                    <textarea class="form-control" id="html-input" rows="20" placeholder="Please provide a 'sc_cid' value above to enable this field." disabled></textarea>
+                </div>
+                <button class="btn btn-primary w-100" id="refactor-button" disabled>
+                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                    <span class="button-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-magic" viewBox="0 0 16 16"><path d="M9.5 2.672a.5.5 0 1 0 1 0V.843a.5.5 0 0 0-1 0v1.829Zm4.5.035A.5.5 0 0 0 13.293 2L12 3.293a.5.5 0 1 0 .707.707L14 2.707a.5.5 0 0 0 0-.707ZM7.293 4L6 5.293a.5.5 0 1 0 .707.707L8 4.707a.5.5 0 0 0 0-.707L6.707 2a.5.5 0 0 0-.707.707L7.293 4Zm-6.225.16a.5.5 0 0 0-.707 0L.293 5.235a.5.5 0 1 0 .707.707L2 5.03a.5.5 0 0 0 0-.707L1.068 4.16ZM1.843 10a.5.5 0 0 0 0 1h1.829a.5.5 0 1 0 0-1H1.843ZM15.157 10a.5.5 0 0 0 0 1h-1.83a.5.5 0 1 0 0-1h1.83Zm-3.04 3.04a.5.5 0 0 0-.707 0l-1.01 1.01a.5.5 0 0 0 .707.707l1.01-1.01a.5.5 0 0 0 0-.707Zm-8.485 0a.5.5 0 0 0-.707 0l-1.01 1.01a.5.5 0 0 0 .707.707l1.01-1.01a.5.5 0 0 0 0-.707ZM10 6.5a.5.5 0 0 0-1 0v3.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L10 10.293V6.5Z"/></svg>
+                        Refactor Code
+                    </span>
+                </button>
+            </div>
+            <div class="col-lg-6">
+                <h2 class="h5 mb-3">Audit Results <span id="audit-spinner" class="spinner-border text-primary ms-2 d-none" role="status"></span></h2>
+                <div id="results-panel">
+                    <div class="alert alert-secondary" role="alert">
+                        Results will appear here once you paste HTML code.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <iframe id="sandbox-frame" style="display: none;"></iframe>
+ 
+    <div class="modal fade" id="refactorModal" tabindex="-1" aria-labelledby="refactorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="refactorModalLabel">Refactored HTML Code</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>The following HTML has been corrected and cleaned. Please review it carefully before use.</p>
+                    <textarea class="form-control" id="refactored-code" rows="20" readonly></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="copy-code-button">Copy Code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
+    <script type="module" src="./js/main.js"></script>
+ 
+</body>
+</html>

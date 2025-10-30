@@ -1,0 +1,114 @@
+<html lang="en" data-bs-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Schedule Generator</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<!-- The schedule-generator has its own CSS file, so we add the styles there -->
+<link rel="stylesheet" href="./css/style.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">UT</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="../email-auditor/index.html">Auditor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Schedule Generator</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../decimal-time-converter/index.html">Decimal Time Converter</a>
+                </li>
+            </ul>
+            <div class="d-flex gap-3">
+              <span class="navbar-text clock" id="etClock">ET: --</span>
+              <span class="navbar-text clock" id="istClock">IST: --</span>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid main-container">
+  <div class="row g-4">
+    <!-- LEFT COLUMN: INPUTS -->
+    <div class="col-lg-6">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="h3 card-title text-center mb-2">Campaign Schedule Generator</h1>
+          <p class="text-center hint">Enter all dates and times in <strong>Eastern Time (ET)</strong>.</p>
+
+          <div class="row g-3">
+            <div class="col-12">
+              <label for="sendDate" class="form-label">Send Date & Time (ET)</label>
+              <input id="sendDate" type="datetime-local" class="form-control">
+              <div id="sendDatePreview" class="date-preview"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="eventStart" class="form-label">Event Start (ET)</label>
+              <input id="eventStart" type="datetime-local" class="form-control">
+              <div id="eventStartPreview" class="date-preview"></div>
+            </div>
+            <div class="col-md-6">
+              <label for="eventEnd" class="form-label">Event End (ET)</label>
+              <input id="eventEnd" type="datetime-local" class="form-control">
+              <div id="eventEndPreview" class="date-preview"></div>
+            </div>
+            <div class="col-12" style="display:none;">
+              <label for="sendInvitationOffset" class="form-label">Send Invitation Offset</label>
+              <select id="sendInvitationOffset" class="form-select">
+                <option value="16">16 days before event (default)</option>
+                <option value="14">14 days</option>
+                <option value="7">7 days</option>
+                <option value="0">0 days (manual)</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="onDemandCheckbox">
+                <label class="form-check-label" for="onDemandCheckbox">
+                  Include On-Demand Campaigns
+                </label>
+              </div>
+            </div>
+            <div class="col-12 d-grid gap-2">
+              <button id="generate" class="btn btn-primary" disabled>Generate Schedule</button>
+              <button id="clear" class="btn btn-secondary" disabled>Clear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: OUTPUT -->
+    <div class="col-lg-6">
+      <h2 class="h5 mb-3">Generated Schedule</h2>
+      <div id="output" style="display: none;">
+        <div class="d-flex justify-content-end mb-3" id="tableToggleRow" style="display:none;">
+          <button id="toggleTable" class="btn btn-sm btn-outline-secondary">Show Table</button>
+        </div>
+        <div id="tableSection" class="mb-3" style="display:none;"></div>
+        <div id="cardsSection"></div>
+      </div>
+      <div id="output-placeholder" class="alert alert-secondary" role="alert">
+          Results will appear here once a schedule is generated.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script src="./js/script.js" defer></script>
+</body>
+</html>

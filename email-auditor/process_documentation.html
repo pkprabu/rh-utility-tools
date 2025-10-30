@@ -1,0 +1,231 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End-to-End Process Document: Definitive Email Auditor</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 1024px; 
+            margin: 20px auto; 
+            padding: 0 20px;
+            background-color: #fdfdfd;
+        }
+        h1, h2, h3, h4 { 
+            color: #c00; /* Red Hat Red */
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 2em;
+        }
+        h1 {
+            font-size: 2.5em;
+            border-bottom-width: 4px;
+        }
+        code { 
+            background-color: #f4f4f4; 
+            padding: 2px 6px; 
+            border: 1px solid #ddd;
+            border-radius: 4px; 
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        pre { 
+            background-color: #282c34; /* Dark theme for code blocks */
+            color: #abb2bf;
+            padding: 20px; 
+            border-radius: 8px; 
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        .section, .feature-category {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filename {
+            font-weight: bold;
+            color: #0056b3;
+        }
+        .feature {
+            border-left: 4px solid #c00;
+            padding-left: 15px;
+            margin-bottom: 1.5em;
+        }
+        .refactorable {
+            display: inline-block;
+            background-color: #e6f4ea;
+            color: #006421;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 0.5em;
+        }
+        strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Definitive Email Auditor: Process Document</h1>
+
+    <div class="section">
+        <h2>1.0 Introduction</h2>
+        <p>This document outlines the complete operational workflow of the <strong>Definitive Email Auditor</strong>, a client-side web application designed to validate and refactor email HTML code. The tool ensures that emails adhere to a predefined set of rules, including brand guidelines, accessibility standards, and technical best practices, before deployment.</p>
+    </div>
+
+    <div class="section">
+        <h2>2.0 System Architecture</h2>
+        <p>The application is a <strong>modular, single-page application (SPA)</strong> that runs entirely in the user's web browser. It leverages a sandboxed <code>&lt;iframe&gt;</code> to safely parse and analyze the provided HTML without affecting the main application page. The architecture is designed for maintainability and scalability by separating concerns into distinct JavaScript modules.</p>
+        <!-- Component Breakdown remains the same -->
+    </div>
+    
+    <div class="section">
+        <h2>3.0 End-to-End Workflow</h2>
+        <p>The workflow details the data flow and process from initial user interaction to the final output. The core stages are: User Input, Debounced Audit Trigger, Two-Phase Audit Execution, Result Rendering, and Optional Code Refactoring.</p>
+        <!-- Workflow steps remain the same -->
+    </div>
+
+    <div class="section">
+        <h2>4.0 Feature Deep Dive</h2>
+        <p>The auditor includes <strong>over 15 distinct checks</strong>, which can be grouped into several categories. Each feature is designed to enforce a specific rule critical for marketing operations, brand consistency, or technical correctness.</p>
+
+        <div class="feature-category">
+            <h3>4.1 URL & Link Validation</h3>
+            
+            <div class="feature">
+                <h4>Universal `sc_cid` Tracking Validation</h4>
+                <p><strong>What it does:</strong> This is a multi-part check that validates the presence and correctness of the <code>sc_cid</code> tracking parameter on all applicable links.</p>
+                <ul>
+                    <li><strong>Missing:</strong> Detects links that should have the parameter but don't.</li>
+                    <li><strong>Malformed:</strong> Finds links where the parameter is present but not correctly formatted as a URL query parameter.</li>
+                    <li><strong>Wrong Value:</strong> Compares the link's <code>sc_cid</code> value against the one provided by the user.</li>
+                    <li><strong>Empty:</strong> Flags links where the <code>sc_cid</code> parameter exists but has no value.</li>
+                    <li><strong>Duplicate:</strong> Identifies links that contain more than one <code>sc_cid</code> parameter.</li>
+                </ul>
+                <p><strong>Why it's important:</strong> Ensures accurate campaign tracking, which is fundamental for measuring marketing effectiveness.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Insecure Links (http://) <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Scans all <code>href</code> attributes and flags any URL that uses the insecure <code>http://</code> protocol.</p>
+                <p><strong>Why it's important:</strong> Protects user security and privacy. Modern browsers often show warnings for insecure content, which can erode user trust.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Links without `target="_blank"` <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Checks if links (excluding certain types like `mailto:` or same-page anchors) are missing the <code>target="_blank"</code> attribute.</p>
+                <p><strong>Why it's important:</strong> Ensures that when a user clicks a link in an email, it opens in a new browser tab, preventing them from navigating away from their webmail client or the web version of the email.</p>
+            </div>
+        </div>
+
+        <div class="feature-category">
+            <h3>4.2 Branding & Content Compliance</h3>
+
+            <div class="feature">
+                <h4>Trademark Formatting <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> A robust, multi-phase check to enforce correct trademark (®) usage.</p>
+                 <ul>
+                    <li>Detects raw `®` symbols that are not wrapped in a `<sup>` tag.</li>
+                    <li>Flags `<sup>` tags containing the symbol that are missing the required `style="line-height: 0;"`.</li>
+                    <li>Identifies and collapses consecutive or nested trademark symbols (`®®`).</li>
+                </ul>
+                <p><strong>Why it's important:</strong> Ensures legal compliance and consistent brand representation across all communications.</p>
+            </div>
+
+            <div class="feature">
+                <h4>"Red Hat" Spacing <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Uses a regular expression to find instances of "Red Hat" that use a standard space instead of the required non-breaking space (`&amp;nbsp;` or `\u00A0`).</p>
+                <p><strong>Why it's important:</strong> Prevents the brand name from being awkwardly split across two lines, maintaining visual integrity.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Invalid Font Family</h4>
+                <p><strong>What it does:</strong> For every text-containing element, it gets the computed `font-family` style and checks if the first font in the stack is one of the approved brand fonts (e.g., "Red Hat Text").</p>
+                <p><strong>Why it's important:</strong> Maintains brand consistency and ensures the email's typography renders as designed.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Invalid Link Color</h4>
+                <p><strong>What it does:</strong> Checks the computed `color` style of every link against a predefined list of valid brand link colors.</p>
+                <p><strong>Why it's important:</strong> Enforces brand guidelines and ensures that links are visually distinct and consistent.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Placeholder (Dummy) Text</h4>
+                <p><strong>What it does:</strong> Scans all text content for common placeholder words like "lorem," "ipsum," "dolor," etc.</p>
+                <p><strong>Why it's important:</strong> Acts as a final safety check to prevent emails from being sent with incomplete or placeholder content.</p>
+            </div>
+        </div>
+
+        <div class="feature-category">
+            <h3>4.3 HTML Best Practices & Accessibility</h3>
+
+            <div class="feature">
+                <h4>Image Policy Violations <span class="refactorable">Partially Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> A group of checks for `<img>` tags:</p>
+                <ul>
+                    <li><strong>Invalid Source:</strong> Ensures the `src` attribute points to the approved image host.</li>
+                    <li><strong>Missing Alt Text:</strong> Checks for the existence of the `alt` attribute. The refactorer adds an empty `alt=""`.</li>
+                    <li><strong>Missing Dimensions:</strong> Verifies that `width` and `height` attributes are present.</li>
+                    <li><strong>Missing Border:</strong> Ensures `border="0"` is set. The refactorer adds this attribute.</li>
+                </ul>
+                <p><strong>Why it's important:</strong> Missing alt text is an accessibility failure. Missing dimensions can cause layout shifts as images load. An explicit border prevents email clients from adding an unwanted default border.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Table Layout & Accessibility <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Checks all `<table>` elements to ensure they have `role="presentation"` and `border="0"`.</p>
+                <p><strong>Why it's important:</strong> In HTML emails, tables are used for layout, not for displaying tabular data. `role="presentation"` tells screen readers to treat them as visual wrappers, not data tables, which is crucial for accessibility.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Inaccessible 'Empty' Links</h4>
+                <p><strong>What it does:</strong> Finds `<a>` tags that contain no text and no image with alt text, making them "invisible" to screen readers.</p>
+                <p><strong>Why it's important:</strong> Links without any descriptive text are a major accessibility issue, as users with screen readers will not know their purpose.</p>
+            </div>
+             <div class="feature">
+                <h4>Links with `title="null"` <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Detects a specific bad practice where a link is given an attribute of `title` with the literal string value "null".</p>
+                <p><strong>Why it's important:</strong> This is often the result of a templating error and can lead to confusing tooltips or behavior in some clients.</p>
+            </div>
+        </div>
+
+        <div class="feature-category">
+            <h3>4.4 Code Quality & Formatting</h3>
+
+            <div class="feature">
+                <h4>Duplicate HTML Attributes <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> This check runs on the raw HTML string (pre-audit) to find tags with repeated attributes (e.g., `<div class="a" class="b">`).</p>
+                <p><strong>Why it's important:</strong> Duplicate attributes are invalid HTML. While browsers often recover by ignoring all but the last instance, this can lead to unpredictable styling and behavior. The refactorer fixes this by keeping only the last defined value.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Extra Whitespace <span class="refactorable">Auto-Fixable</span></h4>
+                <p><strong>What it does:</strong> Finds and flags superfluous whitespace in two contexts: multiple consecutive spaces within text nodes, and leading/trailing/multiple spaces within attribute values.</p>
+                <p><strong>Why it's important:</strong> While often harmless, excess whitespace can occasionally affect layout and makes the raw HTML harder to read. Cleaning it up is a good code hygiene practice.</p>
+            </div>
+
+            <div class="feature">
+                <h4>Invalid Background Image Source</h4>
+                <p><strong>What it does:</strong> Similar to the image source check, but this one specifically parses the `background-image` CSS property to validate the URL.</p>
+                <p><strong>Why it's important:</strong> Ensures that even images loaded via CSS adhere to the approved hosting and brand guidelines.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
