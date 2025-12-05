@@ -1,66 +1,102 @@
-/**
-* Audits the raw HTML string for issues that are lost after browser parsing,
-* such as duplicate attributes on the same tag.
-* @param {string} htmlContent The raw HTML string.
-* @returns {object} An object containing the audit results.
-*/
 export function run(htmlContent) {
-   const results = {
-       duplicate_attributes: []
-   };
+ const results = {
+     duplicate_attributes: [],
+     malformed_html_failures: [],
+     structural_failures: []
+ };
 
-   // This regex finds all HTML tags and captures the tag name and the attribute string.
-   const tagRegex = /<([a-z0-9]+)((?:\s+[a-zA-Z0-9\-:]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^>\s]+))?)*)\s*\/?>/gi;
-   
-   // This regex finds just the names of attributes within the attribute string.
-   const attrNameRegex = /\s+([a-zA-Z0-9\-:]+)(?:\s*=|\s|>)/g;
+ const getLineNumber = (index) => {
+     return htmlContent.substring(0, index).split('\n').length;
+ };
 
-   let tagMatch;
-   while ((tagMatch = tagRegex.exec(htmlContent)) !== null) {
-       const tagName = tagMatch[1];
-       const attributesString = tagMatch[2];
+ let cleanHtml = htmlContent.replace(/<!--\[if[\s\S]*?<!\[endif\]-->/g, '');
+ cleanHtml = cleanHtml.replace(/<!--[\s\S]*?-->/g, '');
+ cleanHtml = cleanHtml.replace(/]*>/i, '');
 
-       if (!attributesString) continue;
+ const tagRegex = /<([a-zA-Z0-9:]+)([^>]*)>/g;
+ let tagMatch;
 
-       const attrNames = [];
-       let attrMatch;
-       while ((attrMatch = attrNameRegex.exec(attributesString)) !== null) {
-           attrNames.push(attrMatch[1].toLowerCase());
-       }
+ while ((tagMatch = tagRegex.exec(cleanHtml)) !== null) {
+     const fullTag = tagMatch[0];
+     const tagName = tagMatch[1];
+     const attributesString = tagMatch[2];
+     const lineNumber = getLineNumber(tagMatch.index);
 
-       const attrCounts = attrNames.reduce((acc, name) => {
-           acc[name] = (acc[name] || 0) + 1;
-           return acc;
-       }, {});
+     let inQuote = null;
+     for (let i = 0; i < attributesString.length; i++) {
+         const char = attributesString[i];
+         if (inQuote) {
+             if (char === inQuote) inQuote = null;
+         } else if (char === '"' || char === "'") {
+             inQuote = char;
+         }
+     }
+     if (inQuote) {
+         results.malformed_html_failures.push({
+             "Reason": `Unclosed attribute value in <${tagName}> tag. A quote is missing.`,
+             "Snippet": fullTag,
+             "Line": lineNumber
+         });
+         continue;
+     }
 
-       for (const attrName in attrCounts) {
-           if (attrCounts[attrName] > 1) {
-               // We can't pass a DOM element reference here, so we pass the tag string.
-               // The refactorer will need to handle this differently.
-               results.duplicate_attributes.push({
-                   "Element": tagName.toUpperCase(),
-                   "Attribute": attrName,
-                   "Count": attrCounts[attrName],
-                   // We need a way to find this element later for the refactorer.
-                   // Let's add a unique ID during the refactoring process.
-                   isRaw: true // Flag that this came from the raw audit
-               });
-           }
-       }
-   }
+     const attrNameRegex = /\s+([a-zA-Z0-9-:]+)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^>\s]+))?/g;
+     const attrNames = [];
+     let attrMatch;
+     while ((attrMatch = attrNameRegex.exec(attributesString)) !== null) {
+         attrNames.push(attrMatch[1].toLowerCase());
+     }
+     const attrCounts = attrNames.reduce((acc, name) => {
+         acc[name] = (acc[name] || 0) + 1;
+         return acc;
+     }, {});
+     for (const attrName in attrCounts) {
+         if (attrCounts[attrName] > 1) {
+             results.duplicate_attributes.push({
+                 "Element": tagName.toUpperCase(),
+                 "Attribute": attrName,
+                 "Snippet": fullTag,
+                 "Line": lineNumber,
+                 isRaw: true
+             });
+         }
+     }
+ }
 
-   // Since we can have multiple elements with the same duplicate attribute,
-   // we'll just show a summary for now. The refactorer will fix all of them.
-   if (results.duplicate_attributes.length > 0) {
-       const uniqueFailures = new Map();
-       results.duplicate_attributes.forEach(failure => {
-           const key = `${failure.Element}-${failure.Attribute}`;
-           if (!uniqueFailures.has(key)) {
-               uniqueFailures.set(key, failure);
-           }
-       });
-       results.duplicate_attributes = Array.from(uniqueFailures.values());
-   }
+ const tagStack = [];
+ const structuralRegex = /<(\/)?([a-zA-Z0-9:]+)[^>]*>/g;
+ const selfClosingTags = new Set(['img', 'br', 'hr', 'input', 'meta', 'link']);
+ let structuralMatch;
 
-   return results;
+ while ((structuralMatch = structuralRegex.exec(cleanHtml)) !== null) {
+     const isClosingTag = structuralMatch[1] === '/';
+     const tagName = structuralMatch[2].toLowerCase();
+     const lineNumber = getLineNumber(structuralMatch.index);
+
+     if (isClosingTag) {
+         if (selfClosingTags.has(tagName)) continue;
+         if (tagStack.length === 0) {
+             results.structural_failures.push({ "Reason": `Found a closing </${tagName}> tag with no corresponding opening tag.`, "Snippet": `</${tagName}>`, "Line": lineNumber });
+         } else {
+             const lastOpenTag = tagStack.pop();
+             if (tagName !== lastOpenTag) {
+                 results.structural_failures.push({ "Reason": `Mismatched closing tag. Expected </${lastOpenTag}> but found </${tagName}>.`, "Snippet": `</${tagName}>`, "Line": lineNumber });
+                 if (lastOpenTag !== 'p') tagStack.push(lastOpenTag);
+             }
+         }
+     } else {
+         if (!selfClosingTags.has(tagName)) {
+             tagStack.push(tagName);
+         }
+     }
+ }
+
+ if (tagStack.length > 0) {
+     while(tagStack.length > 0) {
+         const unclosedTag = tagStack.pop();
+         results.structural_failures.push({ "Reason": `The <${unclosedTag}> tag was left unclosed at the end of the document.`, "Snippet": `<${unclosedTag}>`, "Line": cleanHtml.split('\n').length });
+     }
+ }
+
+ return results;
 }
