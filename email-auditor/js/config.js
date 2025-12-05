@@ -13,6 +13,11 @@ auditor: {
     dummyKeywords: [
         'lorem', 'ipsum', 'dolor', 'amet', 'consectetur', 'adipiscing', 'elit', 'nullam', 'aliquam',
         'purus', 'iaculis', 'viverra', 'morbi', 'sollicitudin', 'convallis', 'curabitur', 'vestibulum'
-    ]
+    ],
+    brandTextRules: {
+        redHatSpacing: {
+            regex: /\bRed(?!\u00A0)\s+Hat\b/gi
+        }
+    }
 }
 };
