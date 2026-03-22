@@ -1,201 +1,1230 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>End-to-End Process Document: Definitive Email Auditor</title>
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
-            line-height: 1.6; 
-            color: #333; 
-            max-width: 1024px; 
-            margin: 20px auto; 
-            padding: 0 20px;
-            background-color: #fdfdfd;
-        }
-        h1, h2, h3, h4 { 
-            color: #c00; /* Red Hat Red */
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            margin-top: 2em;
-        }
-        h1 {
-            font-size: 2.5em;
-            border-bottom-width: 4px;
-        }
-        code { 
-            background-color: #f4f4f4; 
-            padding: 2px 6px; 
-            border: 1px solid #ddd;
-            border-radius: 4px; 
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9em;
-        }
-        pre { 
-            background-color: #282c34; /* Dark theme for code blocks */
-            color: #abb2bf;
-            padding: 20px; 
-            border-radius: 8px; 
-            overflow-x: auto;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.9em;
-        }
-        .section, .feature-category {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .filename {
-            font-weight: bold;
-            color: #0056b3;
-        }
-        .feature {
-            border-left: 4px solid #c00;
-            padding-left: 15px;
-            margin-bottom: 1.5em;
-        }
-        .refactorable {
-            display: inline-block;
-            background-color: #e6f4ea;
-            color: #006421;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        ul {
-            padding-left: 20px;
-        }
-        li {
-            margin-bottom: 0.5em;
-        }
-        strong {
-            color: #333;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Auditor — Process & Reference Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--rh-red: #ee0000;
+--rh-blue: #0066cc;
+--rh-dark: #151515;
+--rh-darker: #0d0d0d;
+--rh-surface: #1a1a1a;
+--rh-surface2: #222222;
+--rh-border: #2e2e2e;
+--rh-text: #e8e8e8;
+--rh-muted: #888;
+--rh-success: #3fb950;
+--rh-warning: #d29922;
+--rh-info: #58a6ff;
+--error-bg: rgba(238,0,0,0.08);
+--warning-bg: rgba(210,153,34,0.08);
+--info-bg: rgba(88,166,255,0.08);
+--pass-bg: rgba(63,185,80,0.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+font-family: 'DM Sans', sans-serif;
+background: var(--rh-darker);
+color: var(--rh-text);
+font-size: 15px;
+line-height: 1.7;
+overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--rh-dark); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+/* ── HERO ── */
+.hero {
+position: relative;
+background: var(--rh-darker);
+padding: 80px 0 60px;
+overflow: hidden;
+border-bottom: 1px solid var(--rh-border);
+}
+.hero::before {
+content: '';
+position: absolute;
+inset: 0;
+background:
+radial-gradient(ellipse 70% 60% at 10% 50%, rgba(238,0,0,0.07) 0%, transparent 70%),
+radial-gradient(ellipse 50% 80% at 90% 20%, rgba(0,102,204,0.06) 0%, transparent 70%);
+pointer-events: none;
+}
+.hero-inner {
+max-width: 1100px;
+margin: 0 auto;
+padding: 0 40px;
+position: relative;
+}
+.hero-badge {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: rgba(238,0,0,0.1);
+border: 1px solid rgba(238,0,0,0.25);
+border-radius: 999px;
+padding: 4px 14px;
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--rh-red);
+margin-bottom: 28px;
+}
+.hero-badge::before {
+content: '';
+width: 6px; height: 6px;
+border-radius: 50%;
+background: var(--rh-red);
+animation: pulse 2s infinite;
+}
+@keyframes pulse {
+0%,100%{opacity:1;transform:scale(1)}
+50%{opacity:0.4;transform:scale(0.7)}
+}
+.hero h1 {
+font-family: 'Fraunces', Georgia, serif;
+font-size: clamp(2.4rem, 5vw, 4rem);
+font-weight: 800;
+line-height: 1.1;
+letter-spacing: -0.02em;
+margin-bottom: 20px;
+}
+.hero h1 span { color: var(--rh-red); }
+.hero-sub {
+font-size: 1.1rem;
+color: var(--rh-muted);
+max-width: 600px;
+margin-bottom: 40px;
+}
+.hero-meta {
+display: flex;
+gap: 32px;
+flex-wrap: wrap;
+}
+.hero-meta-item {
+display: flex;
+flex-direction: column;
+gap: 2px;
+}
+.hero-meta-item .val {
+font-family: 'DM Mono', monospace;
+font-size: 1.5rem;
+font-weight: 500;
+color: #fff;
+}
+.hero-meta-item .lbl {
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.08em;
+color: var(--rh-muted);
+}
+
+/* ── LAYOUT ── */
+.page-wrap {
+max-width: 1100px;
+margin: 0 auto;
+padding: 0 40px;
+display: grid;
+grid-template-columns: 240px 1fr;
+gap: 48px;
+padding-top: 48px;
+padding-bottom: 80px;
+}
+
+/* ── SIDEBAR NAV ── */
+.sidebar {
+position: sticky;
+top: 24px;
+align-self: start;
+height: fit-content;
+}
+.sidebar nav {
+border: 1px solid var(--rh-border);
+border-radius: 8px;
+overflow: hidden;
+background: var(--rh-surface);
+}
+.sidebar nav .nav-section {
+padding: 10px 16px 4px;
+font-size: 10px;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: var(--rh-muted);
+font-weight: 600;
+margin-top: 4px;
+}
+.sidebar nav a {
+display: block;
+padding: 7px 16px;
+font-size: 13px;
+color: #aaa;
+text-decoration: none;
+border-left: 2px solid transparent;
+transition: all 0.15s;
+}
+.sidebar nav a:hover,
+.sidebar nav a.active {
+color: #fff;
+border-left-color: var(--rh-red);
+background: rgba(238,0,0,0.06);
+}
+
+/* ── MAIN CONTENT ── */
+.content section {
+margin-bottom: 64px;
+scroll-margin-top: 24px;
+}
+.content section:last-child { margin-bottom: 0; }
+
+h2.section-title {
+font-family: 'Fraunces', Georgia, serif;
+font-size: 1.9rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+color: #fff;
+margin-bottom: 8px;
+padding-bottom: 16px;
+border-bottom: 1px solid var(--rh-border);
+}
+h3.sub-title {
+font-family: 'DM Sans', sans-serif;
+font-size: 1rem;
+font-weight: 600;
+color: #ddd;
+margin: 28px 0 10px;
+}
+p { color: #bbb; margin-bottom: 12px; }
+p:last-child { margin-bottom: 0; }
+strong { color: #e8e8e8; font-weight: 600; }
+a { color: var(--rh-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── CALLOUT BOXES ── */
+.callout {
+border-radius: 8px;
+padding: 16px 20px;
+margin: 20px 0;
+border: 1px solid;
+font-size: 14px;
+}
+.callout.tip    { background: rgba(63,185,80,0.07);  border-color: rgba(63,185,80,0.25);  color: #a7d8ac; }
+.callout.warn   { background: rgba(210,153,34,0.07); border-color: rgba(210,153,34,0.25); color: #d4b060; }
+.callout.info   { background: rgba(88,166,255,0.07); border-color: rgba(88,166,255,0.25); color: #90bfff; }
+.callout.danger { background: rgba(238,0,0,0.07);    border-color: rgba(238,0,0,0.25);    color: #f09090; }
+.callout strong { color: inherit; }
+.callout-icon { font-size: 1rem; margin-right: 6px; }
+
+/* ── CODE ── */
+code {
+font-family: 'DM Mono', monospace;
+font-size: 12.5px;
+background: #1f1f1f;
+border: 1px solid #333;
+border-radius: 4px;
+padding: 1px 6px;
+color: #f0a;
+}
+pre {
+background: #111;
+border: 1px solid var(--rh-border);
+border-radius: 8px;
+padding: 20px;
+overflow-x: auto;
+font-family: 'DM Mono', monospace;
+font-size: 12.5px;
+line-height: 1.6;
+color: #ccc;
+margin: 16px 0;
+}
+pre .cm { color: #555; font-style: italic; }
+pre .kw { color: #79b8ff; }
+pre .st { color: #9ecbff; }
+pre .at { color: #ffab70; }
+pre .vl { color: #85e89d; }
+
+/* ── STEP CARDS ── */
+.steps {
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin: 20px 0;
+}
+.step {
+display: flex;
+gap: 16px;
+align-items: flex-start;
+background: var(--rh-surface);
+border: 1px solid var(--rh-border);
+border-radius: 8px;
+padding: 16px 20px;
+transition: border-color 0.2s;
+}
+.step:hover { border-color: #444; }
+.step-num {
+flex-shrink: 0;
+width: 32px; height: 32px;
+border-radius: 50%;
+background: var(--rh-red);
+color: #fff;
+font-weight: 700;
+font-size: 14px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.step-body h4 { font-size: 14px; font-weight: 600; color: #eee; margin-bottom: 4px; }
+.step-body p  { font-size: 13px; color: #999; margin: 0; }
+
+/* ── CHECK CATALOGUE TABLE ── */
+.check-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+.check-table th {
+text-align: left;
+padding: 8px 12px;
+background: #1f1f1f;
+color: var(--rh-muted);
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.07em;
+font-weight: 600;
+border-bottom: 1px solid var(--rh-border);
+}
+.check-table td {
+padding: 9px 12px;
+border-bottom: 1px solid #222;
+color: #bbb;
+vertical-align: top;
+}
+.check-table tr:last-child td { border-bottom: none; }
+.check-table tr:hover td { background: rgba(255,255,255,0.02); }
+.check-table .check-title { font-weight: 500; color: #ddd; }
+.badge-sev {
+display: inline-block;
+padding: 2px 8px;
+border-radius: 4px;
+font-size: 11px;
+font-weight: 600;
+}
+.sev-error   { background: rgba(238,0,0,0.15);    color: #f09090; border: 1px solid rgba(238,0,0,0.25); }
+.sev-warning { background: rgba(210,153,34,0.15); color: #d4b060; border: 1px solid rgba(210,153,34,0.25); }
+.sev-info    { background: rgba(88,166,255,0.15); color: #90bfff; border: 1px solid rgba(88,166,255,0.25); }
+
+/* ── CONFIG TABLE ── */
+.config-grid {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+margin: 16px 0;
+}
+.config-item {
+background: var(--rh-surface);
+border: 1px solid var(--rh-border);
+border-radius: 8px;
+padding: 14px 16px;
+}
+.config-item .config-key {
+font-family: 'DM Mono', monospace;
+font-size: 12px;
+color: #f0a;
+margin-bottom: 4px;
+}
+.config-item .config-val {
+font-family: 'DM Mono', monospace;
+font-size: 11px;
+color: #85e89d;
+margin-bottom: 6px;
+}
+.config-item .config-desc { font-size: 12px; color: #888; }
+
+/* ── FEATURE CARDS ── */
+.feature-grid {
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 14px;
+margin: 20px 0;
+}
+.feature-card {
+background: var(--rh-surface);
+border: 1px solid var(--rh-border);
+border-radius: 8px;
+padding: 18px;
+transition: border-color 0.2s, transform 0.2s;
+}
+.feature-card:hover { border-color: #444; transform: translateY(-1px); }
+.feature-card .fc-icon { font-size: 1.4rem; margin-bottom: 10px; }
+.feature-card h4 { font-size: 14px; font-weight: 600; color: #eee; margin-bottom: 6px; }
+.feature-card p  { font-size: 13px; color: #888; margin: 0; }
+
+/* ── TRADEMARK BOX ── */
+.trademark-box {
+background: #111;
+border: 1px solid var(--rh-border);
+border-left: 3px solid var(--rh-red);
+border-radius: 8px;
+padding: 16px 20px;
+margin: 16px 0;
+font-family: 'DM Mono', monospace;
+font-size: 13px;
+}
+.trademark-box .pass { color: var(--rh-success); }
+.trademark-box .fail { color: #f09090; }
+.trademark-box .label { color: #555; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+
+/* ── TOC ANCHOR OFFSET ── */
+.anchor-target { scroll-margin-top: 24px; }
+
+/* ── DIVIDER ── */
+.divider {
+width: 40px; height: 2px;
+background: var(--rh-red);
+border-radius: 1px;
+margin: 12px 0 20px;
+}
+
+/* ── INLINE LIST ── */
+ul.doc-list {
+padding-left: 20px;
+margin: 10px 0;
+}
+ul.doc-list li {
+color: #bbb;
+margin-bottom: 6px;
+font-size: 14px;
+}
+ul.doc-list li strong { color: #ddd; }
+
+/* ── FOOTER ── */
+footer {
+border-top: 1px solid var(--rh-border);
+padding: 32px 40px;
+max-width: 1100px;
+margin: 0 auto;
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 12px;
+}
+footer p { color: #555; font-size: 12px; margin: 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+.page-wrap { grid-template-columns: 1fr; }
+.sidebar { display: none; }
+.hero-inner, footer { padding: 0 20px; }
+.page-wrap { padding: 20px; }
+.feature-grid, .config-grid { grid-template-columns: 1fr; }
+}
+
+/* ── SCROLL-SPY active via JS ── */
+</style>
 </head>
 <body>
 
-    <h1>Definitive Email Auditor: Process Document</h1>
+<!-- ═══════════════════════════════════════════════════════════ HERO ══ -->
+<header class="hero">
+<div class="hero-inner">
+  <div class="hero-badge">Process & Reference Guide</div>
+  <h1>Red Hat <span>Email Auditor</span><br>Documentation</h1>
+  <p class="hero-sub">Everything you need to know — from first use to enterprise deployment. No prior knowledge required.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span class="val">v1.1.0</span><span class="lbl">Current Version</span></div>
+    <div class="hero-meta-item"><span class="val">44</span><span class="lbl">Audit Checks</span></div>
+    <div class="hero-meta-item"><span class="val">3</span><span class="lbl">Severity Levels</span></div>
+    <div class="hero-meta-item"><span class="val">100%</span><span class="lbl">Client-Side</span></div>
+  </div>
+</div>
+</header>
 
-    <div class="section">
-        <h2>1.0 Introduction</h2>
-        <p>This document outlines the complete operational workflow of the <strong>Definitive Email Auditor</strong>, a client-side web application designed to validate and refactor email HTML code. The tool ensures that emails adhere to a predefined set of rules, including brand guidelines, accessibility standards, and technical best practices, before deployment.</p>
+<!-- ═══════════════════════════════════════════════════════════ BODY ══ -->
+<div class="page-wrap">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+<nav id="toc-nav">
+  <div class="nav-section">Introduction</div>
+  <a href="#what-is-it">What is this app?</a>
+  <a href="#why-needed">Why is it needed?</a>
+  <a href="#impact">Business impact</a>
+  <div class="nav-section">Getting Started</div>
+  <a href="#requirements">Requirements</a>
+  <a href="#how-to-use">How to use it</a>
+  <a href="#input-modes">Input modes</a>
+  <div class="nav-section">Understanding Results</div>
+  <a href="#severity">Severity levels</a>
+  <a href="#results-ui">Reading results</a>
+  <a href="#checks-errors">Error checks</a>
+  <a href="#checks-warnings">Warning checks</a>
+  <a href="#checks-info">Info checks</a>
+  <div class="nav-section">Advanced</div>
+  <a href="#sc-cid">sc_cid tracking</a>
+  <a href="#trademark">Trademark rules</a>
+  <a href="#settings">Settings panel</a>
+  <a href="#refactor">Refactor tool</a>
+  <a href="#pdf-export">PDF export</a>
+  <a href="#preview">Live preview</a>
+  <div class="nav-section">Reference</div>
+  <a href="#config-ref">Default config</a>
+  <a href="#faq">FAQ</a>
+  <a href="#glossary">Glossary</a>
+</nav>
+</aside>
+
+<!-- ── MAIN CONTENT ── -->
+<main class="content">
+
+<!-- ─────────────────────────────────────── WHAT IS IT ── -->
+<section id="what-is-it" class="anchor-target">
+<h2 class="section-title">What is this app?</h2>
+<div class="divider"></div>
+<p>The <strong>Red Hat Email Auditor</strong> is a browser-based quality assurance tool for HTML email campaigns. It analyses the source code of an email before it is sent, automatically detecting a wide range of problems — from broken links and missing tracking parameters to brand guideline violations and email-client compatibility issues.</p>
+<p>Think of it as a spell-checker, but for HTML email code. Just as a spell-checker scans a document for spelling mistakes before you publish it, the Email Auditor scans your email's HTML for technical, brand, and deliverability problems before you send it to thousands of recipients.</p>
+
+<div class="callout info">
+  <span class="callout-icon">💡</span>
+  <strong>Completely private.</strong> The app runs entirely inside your browser. Your HTML code is never uploaded to any server. No internet connection is required once the page has loaded.
+</div>
+
+<h3 class="sub-title">Who should use it?</h3>
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="fc-icon">✍️</div>
+    <h4>Email Developers</h4>
+    <p>Validate HTML structure, CSS compatibility, and link integrity before handing off to campaign managers.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">📢</div>
+    <h4>Campaign Managers</h4>
+    <p>Verify that tracking parameters (sc_cid) are correctly applied to every link before scheduling a send.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">🎨</div>
+    <h4>Brand Teams</h4>
+    <p>Ensure font families, link colours, trademark symbols, and "Red Hat" spacing all conform to brand standards.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">⚖️</div>
+    <h4>Legal & Compliance</h4>
+    <p>Confirm every email contains the legally required unsubscribe link and physical postal address (CAN-SPAM / GDPR).</p>
+  </div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── WHY NEEDED ── -->
+<section id="why-needed" class="anchor-target">
+<h2 class="section-title">Why is it needed?</h2>
+<div class="divider"></div>
+<p>HTML email is one of the most fragile environments in web development. Unlike a website that runs in a single controlled browser, an HTML email is rendered by dozens of different email clients — Gmail, Outlook, Apple Mail, Samsung Mail, Yahoo Mail — each with its own quirks, CSS restrictions, and rendering engines. A feature that works perfectly in one client can be completely broken in another.</p>
+
+<h3 class="sub-title">The problems it prevents</h3>
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Broken tracking — lost campaign data</h4>
+      <p>Every marketing link must carry an <code>sc_cid</code> tracking parameter so that your analytics platform can attribute clicks to the correct campaign. A single link without it means you cannot measure that email's performance. With hundreds of links across dozens of campaigns, manual checking is error-prone and time-consuming.</p>
     </div>
-
-    <div class="section">
-        <h2>2.0 System Architecture</h2>
-        <p>The application is a <strong>modular, single-page application (SPA)</strong> that runs entirely in the user's web browser. It leverages a sandboxed <code>&lt;iframe&gt;</code> to safely parse and analyze the provided HTML without affecting the main application page. The architecture is designed for maintainability and scalability by separating concerns into distinct JavaScript modules.</p>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Email client rendering failures</h4>
+      <p>Outlook (used by the majority of enterprise organisations) does not support CSS Flexbox, Grid, animations, or transitions. Gmail strips <code>&lt;style&gt;</code> blocks and requires all CSS to be inline. Using any of these unsupported features means your email layout silently breaks for a large portion of your audience.</p>
     </div>
-    
-    <div class="section">
-        <h2>3.0 End-to-End Workflow</h2>
-        <p>The workflow details the data flow and process from initial user interaction to the final output. The core stages are: User Input, Debounced Audit Trigger, Two-Phase Audit Execution, Result Rendering, and Optional Code Refactoring.</p>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Legal non-compliance</h4>
+      <p>CAN-SPAM (US) and GDPR (EU) legally require every commercial email to include a visible unsubscribe mechanism and a physical postal address. Missing either can result in regulatory fines. These are easy to overlook when a template is modified or content is updated.</p>
     </div>
-
-    <div class="section">
-        <h2>4.0 Feature Deep Dive</h2>
-        <p>The auditor includes numerous distinct checks, which can be grouped into several categories. Each feature is designed to enforce a specific rule critical for marketing operations, brand consistency, or technical correctness.</p>
-
-        <div class="feature-category">
-            <h3>4.1 URL & Link Validation</h3>
-            
-            <div class="feature">
-                <h4>Universal `sc_cid` Tracking Validation <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> This is a multi-part check that validates the presence and correctness of the <code>sc_cid</code> tracking parameter on all applicable links. The refactorer will automatically add the correct `sc_cid` to links that are missing the parameter or have an empty one.</p>
-                <ul>
-                    <li><strong>Audit:</strong> Detects links that are missing the parameter, have the wrong value, are malformed, empty, or duplicated.</li>
-                    <li><strong>Refactor:</strong> If a link is missing the `sc_cid` parameter (or it is present but empty), the refactorer will append the correct parameter and value based on the user's input. It respects an internal ignore-list for links that should not be tracked.</li>
-                </ul>
-                <p><strong>Why it's important:</strong> Ensures accurate campaign tracking, which is fundamental for measuring marketing effectiveness.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Insecure Links (http://) <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> Scans all <code>href</code> attributes and flags any URL that uses the insecure <code>http://</code> protocol.</p>
-                <p><strong>Why it's important:</strong> Protects user security and privacy. Modern browsers often show warnings for insecure content, which can erode user trust.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Links without `target="_blank"` <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> Checks if links (excluding certain types like `mailto:` or same-page anchors) are missing the <code>target="_blank"</code> attribute.</p>
-                <p><strong>Why it's important:</strong> Ensures that when a user clicks a link in an email, it opens in a new browser tab, preventing them from navigating away from their webmail client.</p>
-            </div>
-
-             <div class="feature">
-                <h4>Underlined Linked Images <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> Finds `&lt;a&gt;` tags that contain an `&lt;img&gt;` and ensures they have the `text-decoration: none;` style applied.</p>
-                <p><strong>Why it's important:</strong> Prevents some email clients from rendering a distracting and unsightly underline on clickable images.</p>
-            </div>
-        </div>
-
-        <div class="feature-category">
-            <h3>4.2 Branding & Content Compliance</h3>
-
-            <div class="feature">
-                <h4>Trademark & Symbol Validation <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> A robust, multi-phase check to enforce correct trademark (®) usage. This combines several checks into one category.</p>
-                 <ul>
-                    <li>Detects raw `®` symbols that are not wrapped in a `&lt;sup&gt;` tag.</li>
-                    <li>Flags `&lt;sup&gt;` tags containing the symbol that are missing the required `style="line-height: 0;"`.</li>
-                    <li>Identifies and collapses consecutive or improperly nested trademark `&lt;sup&gt;` tags.</li>
-                </ul>
-                <p><strong>Why it's important:</strong> Ensures legal compliance and consistent brand representation across all communications.</p>
-            </div>
-
-            <div class="feature">
-                <h4>"Red Hat" Spacing <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> Uses a regular expression to find instances of "Red Hat" that use a standard space instead of the required non-breaking space (`&amp;nbsp;`).</p>
-                <p><strong>Why it's important:</strong> Prevents the brand name from being awkwardly split across two lines, maintaining visual integrity.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Invalid Font Family</h4>
-                <p><strong>What it does:</strong> Checks the computed `font-family` of text elements against an approved list of brand fonts.</p>
-                <p><strong>Why it's important:</strong> Maintains brand consistency and ensures typography renders as designed.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Placeholder (Dummy) Text</h4>
-                <p><strong>What it does:</strong> Scans all text content for common placeholder words like "lorem," "ipsum," etc.</p>
-                <p><strong>Why it's important:</strong> A final safety check to prevent emails from being sent with incomplete content.</p>
-            </div>
-        </div>
-
-        <div class="feature-category">
-            <h3>4.3 HTML Best Practices & Accessibility</h3>
-
-            <div class="feature">
-                <h4>Image & Link Compliance <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> A group of checks for `&lt;img&gt;` tags and the `&lt;a&gt;` tags that contain them. The refactorer applies intelligent fixes.</p>
-                <ul>
-                    <li><strong>Invalid Source:</strong> Ensures the `src` attribute points to the approved image host.</li>
-                    <li><strong>Missing Alt Text:</strong> Checks for and fixes missing `alt` attributes by adding `alt=""`.</li>
-                    <li><strong>Missing/Incorrect Dimensions:</strong> Verifies that `width` and `height` attributes are present. The refactorer sets these attributes based on the image's actual dimensions to prevent layout shift, while also adding `style="height: auto;"` to ensure responsiveness.</li>
-                    <li><strong>Missing Border:</strong> Ensures `border="0"` is set on the attribute and in the style.</li>
-                    <li><strong>Missing `display: block`:** Adds this style to remove extra spacing below images in some clients.</li>
-                    <li><strong>Responsive Styling:</strong> For large images, the refactorer automatically applies the "fluid-hybrid" technique (`width:100%`, `max-width: [original]px`) to ensure they scale correctly on mobile devices.</li>
-                </ul>
-                <p><strong>Why it's important:</strong> This suite of fixes ensures images are accessible, correctly sized, responsive, and free of common rendering bugs like unwanted borders or gaps.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Table Layout & Accessibility <span class="refactorable">Auto-Fixable</span></h4>
-                <p><strong>What it does:</strong> Checks all `&lt;table&gt;` elements to ensure they have `role="presentation"` and `border="0"`.</p>
-                <p><strong>Why it's important:</strong> Tells screen readers to treat layout tables as visual wrappers, not data tables, which is crucial for accessibility.</p>
-            </div>
-
-            <div class="feature">
-                <h4>Inaccessible 'Empty' Links</h4>
-                <p><strong>What it does:</strong> Finds `&lt;a&gt;` tags that contain no text and no image with alt text, making them "invisible" to screen readers.</p>
-                <p><strong>Why it's important:</strong> Links without any descriptive text are a major accessibility issue.</p>
-            </div>
-        </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Brand guideline violations</h4>
+      <p>Red Hat's brand guidelines specify exact fonts (Red Hat Text, Red Hat Display), exact link colours (#EE0000 red, #0066CC blue), and exact trademark formatting — the registered trademark symbol must be written as <code>&lt;sup style="line-height:0;"&gt;&reg;&lt;/sup&gt;</code>. Manual review across a team of multiple developers is inconsistent and unreliable.</p>
     </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>Security vulnerabilities</h4>
+      <p>Email clients block JavaScript entirely. An email containing <code>&lt;script&gt;</code> tags or inline event handlers (onclick, onload) will be rejected by spam filters and may flag the sender's domain as a security risk. Iframes and forms are equally problematic.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h4>Gmail clipping</h4>
+      <p>Gmail truncates emails larger than 102 KB with a "Message clipped" notice, hiding the unsubscribe link from the user — a direct CAN-SPAM violation. The auditor warns when your email approaches this threshold.</p>
+    </div>
+  </div>
+</div>
+</section>
 
+<!-- ─────────────────────────────────────── IMPACT ── -->
+<section id="impact" class="anchor-target">
+<h2 class="section-title">Business impact</h2>
+<div class="divider"></div>
+<p>The cost of an error in a sent email is significantly higher than the cost of catching it before sending. Unlike a website where you can push a hotfix, a sent email cannot be recalled.</p>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <div class="fc-icon">📊</div>
+    <h4>Accurate campaign attribution</h4>
+    <p>Every click correctly attributed to its campaign means marketing decisions are based on real data. A missing <code>sc_cid</code> on even one high-traffic link can skew ROI calculations for the entire campaign.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">🔒</div>
+    <h4>Consistent brand trust</h4>
+    <p>Recipients notice broken layouts, incorrect fonts, and misspelled brand names. Consistent, polished emails build trust. A single email with "RedHat" (one word) instead of "Red Hat" (two words) undermines brand credibility.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">⚡</div>
+    <h4>Reduced QA cycle time</h4>
+    <p>A full manual audit of a complex HTML email takes 30–60 minutes per developer. The auditor completes the same check in under 3 seconds, freeing the team for higher-value work.</p>
+  </div>
+  <div class="feature-card">
+    <div class="fc-icon">🛡️</div>
+    <h4>Legal protection</h4>
+    <p>Automated compliance checks for unsubscribe links and physical addresses reduce the risk of CAN-SPAM violations. Documentation that you ran pre-send QA provides a defensible paper trail.</p>
+  </div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── REQUIREMENTS ── -->
+<section id="requirements" class="anchor-target">
+<h2 class="section-title">Requirements</h2>
+<div class="divider"></div>
+<p>The Email Auditor has no installation requirements. It is a static HTML page that runs entirely in a modern web browser.</p>
+
+<h3 class="sub-title">Browser support</h3>
+<ul class="doc-list">
+  <li><strong>Google Chrome 90+</strong> — recommended (best compatibility)</li>
+  <li><strong>Mozilla Firefox 90+</strong> — fully supported</li>
+  <li><strong>Microsoft Edge 90+</strong> — fully supported</li>
+  <li><strong>Apple Safari 15+</strong> — fully supported</li>
+</ul>
+
+<h3 class="sub-title">Internet connection</h3>
+<p>An internet connection is required only for the <strong>initial page load</strong> to fetch Bootstrap CSS, Red Hat fonts, and the jsPDF library from CDN. Once loaded, the audit itself runs 100% offline. If you open the tool and immediately disconnect from the internet, it will continue to function correctly.</p>
+
+<div class="callout warn">
+  <span class="callout-icon">⚠</span>
+  <strong>File type restriction:</strong> The file upload feature accepts only <code>.html</code> and <code>.htm</code> files. Attempting to upload a Word document, PDF, or plain text file will produce an error.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── HOW TO USE ── -->
+<section id="how-to-use" class="anchor-target">
+<h2 class="section-title">How to use it</h2>
+<div class="divider"></div>
+<p>Using the auditor takes less than 30 seconds once you have your email's HTML code ready.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Enter the sc_cid value</h4>
+      <p>In the top field labelled <strong>"Specific sc_cid Value"</strong>, type the tracking code for this campaign — for example <code>7013a000003SUdXAAW</code>. This unlocks the HTML input field below. The auditor uses this value to verify that every link in your email carries the correct tracking parameter.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Provide the HTML</h4>
+      <p>There are three ways to provide your email's HTML:</p>
+      <ul class="doc-list" style="margin-top:8px;">
+        <li><strong>Paste:</strong> Copy the HTML source from your email editor and paste it into the large text area.</li>
+        <li><strong>Upload:</strong> Click the <strong>"Upload File"</strong> button and select your <code>.html</code> or <code>.htm</code> file.</li>
+        <li><strong>Drag and drop:</strong> Drag an HTML file from your file manager and drop it directly onto the text area. A blue dashed border with a "Drop here" overlay will appear to confirm the drop zone is active.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Wait for results (automatic)</h4>
+      <p>The audit runs automatically — there is no button to press. Results appear in the right panel within 1–3 seconds for typical emails. For very large files (over 200 KB) a "Auditing large file…" status message appears so you know the app is working.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Review and fix</h4>
+      <p>Work through the results panel. Each item is colour-coded by severity. Click on any row in a failure table to highlight the corresponding element in the live preview (if the preview pane is open). Fix issues in your email editor, re-paste the updated HTML, and the audit runs again automatically.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>Export the report</h4>
+      <p>Once your review is complete, click <strong>"Export PDF"</strong> in the summary bar. A formatted PDF report is downloaded immediately to your computer. This report can be attached to your campaign ticket as evidence of pre-send QA.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── INPUT MODES ── -->
+<section id="input-modes" class="anchor-target">
+<h2 class="section-title">Input modes</h2>
+<div class="divider"></div>
+<p>The auditor has two input modes, selected with the <strong>Full HTML / Body Only</strong> toggle above the text area.</p>
+
+<h3 class="sub-title">Full HTML mode (default)</h3>
+<p>Use this when pasting or uploading a <strong>complete, standalone HTML email</strong> — one that starts with <code>&lt;!DOCTYPE html&gt;</code> and contains a full <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> structure. This is the format produced by most email platforms (Marketo, HubSpot, Salesforce Marketing Cloud) when you export or view the email source.</p>
+<p>In this mode the auditor checks for document-level issues: missing <code>&lt;meta charset&gt;</code>, missing <code>&lt;title&gt;</code>, missing viewport meta tag, and missing <code>lang</code> attribute.</p>
+
+<h3 class="sub-title">Body Only mode</h3>
+<p>Use this when you only have <strong>the content of the email body</strong> — HTML that starts directly with a <code>&lt;table&gt;</code> or <code>&lt;div&gt;</code> without any surrounding document structure. The auditor automatically wraps the fragment in a minimal HTML shell before auditing it.</p>
+
+<div class="callout tip">
+  <span class="callout-icon">✅</span>
+  <strong>When in doubt, use Full HTML mode.</strong> If your code contains <code>&lt;!DOCTYPE html&gt;</code> anywhere, use Full HTML mode. If it starts directly with a table or div, use Body Only mode.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── SEVERITY ── -->
+<section id="severity" class="anchor-target">
+<h2 class="section-title">Severity levels</h2>
+<div class="divider"></div>
+<p>Every check is classified into one of three severity levels. Understanding what each level means helps you prioritise your fixes.</p>
+
+<table class="check-table">
+<thead><tr><th>Level</th><th>Colour</th><th>Meaning</th><th>Action required?</th></tr></thead>
+<tbody>
+<tr>
+  <td><span class="badge-sev sev-error">Error</span></td>
+  <td>Red</td>
+  <td>A problem that will either break the email's functionality, violate a mandatory brand or legal requirement, or cause the email to fail QA. Errors <strong>must be fixed</strong> before the email is sent.</td>
+  <td><strong>Yes — block send</strong></td>
+</tr>
+<tr>
+  <td><span class="badge-sev sev-warning">Warning</span></td>
+  <td>Amber</td>
+  <td>A best-practice violation or potential problem that may affect rendering in certain clients, readability, or accessibility. Should be fixed if possible, but may be acceptable depending on context.</td>
+  <td>Investigate before sending</td>
+</tr>
+<tr>
+  <td><span class="badge-sev sev-info">Info</span></td>
+  <td>Blue</td>
+  <td>A missing element that is recommended but not strictly mandatory. These flags bring items to your attention that some clients or contexts may require.</td>
+  <td>Review and consider</td>
+</tr>
+</tbody>
+</table>
+
+<p>A fourth state — <span class="badge-sev" style="background:rgba(128,128,128,0.15);color:#aaa;border:1px solid #444;">Passed</span> — means the check found no problems. A grey <strong>Disabled</strong> badge means the check has been turned off in the Settings panel and was not run.</p>
+
+<div class="callout danger">
+  <span class="callout-icon">🚨</span>
+  <strong>The amber banner at the top of the page</strong> appears when any checks are disabled. If you see it, the audit results are incomplete. Click "Enable in Settings" to turn checks back on before treating the report as final.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── RESULTS UI ── -->
+<section id="results-ui" class="anchor-target">
+<h2 class="section-title">Reading the results</h2>
+<div class="divider"></div>
+
+<h3 class="sub-title">Summary bar</h3>
+<p>At the top of the results panel you will see a row of coloured badges: <span class="badge-sev sev-error">N Errors</span> <span class="badge-sev sev-warning">N Warnings</span> <span class="badge-sev" style="background:rgba(63,185,80,0.15);color:#a7d8ac;border:1px solid rgba(63,185,80,0.25);">N Passed</span>. These give you a quick overall health score at a glance. The <strong>Export PDF</strong> button is also here.</p>
+
+<h3 class="sub-title">Accordion rows</h3>
+<p>Below the summary bar, every check has its own row in an accordion list. The row colour indicates the status:</p>
+<ul class="doc-list">
+  <li><strong>Red row</strong> — this check found errors. Click the row to expand it and see a table of every failing item.</li>
+  <li><strong>Amber row</strong> — this check found warnings. Click to expand.</li>
+  <li><strong>Green row</strong> — this check passed. The row cannot be expanded (there is nothing to show).</li>
+  <li><strong>Grey row</strong> — this check is disabled in Settings.</li>
+</ul>
+
+<h3 class="sub-title">Element highlighting</h3>
+<p>For checks that involve specific HTML elements (images, tables, font failures, etc.), each row in the failure table is <strong>clickable</strong>. Clicking a row opens the live preview pane (if not already open) and draws a red outline around the exact element in your email that caused the failure. This makes it much faster to locate and fix the problem.</p>
+</section>
+
+<!-- ─────────────────────────────────────── ERROR CHECKS ── -->
+<section id="checks-errors" class="anchor-target">
+<h2 class="section-title">All checks — Errors</h2>
+<div class="divider"></div>
+<p>The following checks are classified as Errors. They represent mandatory requirements — the email <strong>must not be sent</strong> until all of these pass.</p>
+
+<table class="check-table">
+<thead><tr><th style="width:30%">Check name</th><th style="width:55%">What it detects</th><th>Fix</th></tr></thead>
+<tbody>
+<tr>
+  <td class="check-title">HTML Structural Integrity</td>
+  <td>Mismatched or unclosed HTML tags — e.g. <code>&lt;div&gt;</code> closed with <code>&lt;/span&gt;</code>. These cause unpredictable layout breaks across email clients.</td>
+  <td>Fix the mismatched tags in your HTML editor.</td>
+</tr>
+<tr>
+  <td class="check-title">Malformed HTML Syntax</td>
+  <td>Unclosed quote marks in attributes — e.g. <code>href="https://example.com</code> (missing closing quote). Browsers silently correct these but email clients may not.</td>
+  <td>Close all attribute quotes correctly.</td>
+</tr>
+<tr>
+  <td class="check-title">JavaScript Detected</td>
+  <td><code>&lt;script&gt;</code> tags or inline event handlers (<code>onclick</code>, <code>onload</code>, <code>onmouseover</code>) anywhere in the email. All JavaScript is stripped by email clients and the presence of script tags is a spam signal.</td>
+  <td>Remove all script tags and event handler attributes.</td>
+</tr>
+<tr>
+  <td class="check-title">Iframes Detected</td>
+  <td><code>&lt;iframe&gt;</code> elements. Blocked by all major email clients and considered a spam indicator.</td>
+  <td>Remove all iframes. Use static images or links instead.</td>
+</tr>
+<tr>
+  <td class="check-title">Form Elements Detected</td>
+  <td><code>&lt;form&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;select&gt;</code>, <code>&lt;textarea&gt;</code>, <code>&lt;button&gt;</code> elements. Forms are stripped or broken in virtually all email clients.</td>
+  <td>Remove all form elements. Link to a landing page with a form instead.</td>
+</tr>
+<tr>
+  <td class="check-title">Insecure Links (http://)</td>
+  <td>Links using <code>http://</code> instead of <code>https://</code>. Insecure links are flagged by browsers, may trigger spam filters, and can expose recipients to security risks.</td>
+  <td>Change all <code>http://</code> links to <code>https://</code>.</td>
+</tr>
+<tr>
+  <td class="check-title">sc_cid Validation</td>
+  <td>Catches all tracking parameter problems: missing sc_cid, empty value, wrong value, duplicate parameter, parameter in path instead of query string, and relative URLs with no hostname. See the <a href="#sc-cid">sc_cid section</a> for full details.</td>
+  <td>Add or correct the <code>sc_cid</code> parameter on every link.</td>
+</tr>
+<tr>
+  <td class="check-title">Duplicate HTML Attributes</td>
+  <td>The same attribute appearing twice on one element — e.g. <code>width="600" width="800"</code>. Which value the browser uses is undefined and inconsistent across clients.</td>
+  <td>Remove the duplicate attribute, keeping the correct value.</td>
+</tr>
+<tr>
+  <td class="check-title">Duplicate Element IDs</td>
+  <td">The same <code>id="..."</code> value used on multiple elements. IDs must be unique per document. Duplicates break anchor links and can cause unpredictable rendering.</td>
+  <td>Make all <code>id</code> attribute values unique.</td>
+</tr>
+<tr>
+  <td class="check-title">Nested Anchor Tags</td>
+  <td>An <code>&lt;a&gt;</code> tag nested inside another <code>&lt;a&gt;</code> tag. This is invalid HTML. Browsers restructure the DOM when they encounter it, often in unexpected ways.</td>
+  <td>Restructure so links are never nested inside other links.</td>
+</tr>
+<tr>
+  <td class="check-title">Email File Size Warning</td>
+  <td>Email HTML exceeding Gmail's 102 KB clip threshold. Gmail truncates the email body with a "Message clipped" link, hiding content — including the unsubscribe link — from the recipient.</td>
+  <td>Reduce HTML size: remove commented-out code, trim whitespace, use shorter class names, host large content externally.</td>
+</tr>
+<tr>
+  <td class="check-title">Image Policy Violations</td>
+  <td>Images failing any of these requirements: src not from <code>https://explore.redhat.com/</code>, missing <code>alt</code> attribute (null, not just empty), missing <code>width</code> or <code>height</code>, missing <code>border="0"</code>.</td>
+  <td>Fix each flagged image attribute. All production images must be hosted on the approved CDN.</td>
+</tr>
+<tr>
+  <td class="check-title">Table Layout & Accessibility</td>
+  <td>Tables missing <code>border="0"</code> (prevents default borders in Outlook) or <code>role="presentation"</code> (tells screen readers the table is for layout, not data).</td>
+  <td>Add <code>border="0" role="presentation"</code> to every layout table.</td>
+</tr>
+<tr>
+  <td class="check-title">Trademark Formatting Issues</td>
+  <td>The registered trademark symbol (®) in any form other than the exact required markup. See the <a href="#trademark">Trademark section</a> for details.</td>
+  <td>Use only <code>&lt;sup style="line-height:0;"&gt;&amp;reg;&lt;/sup&gt;</code>.</td>
+</tr>
+<tr>
+  <td class="check-title">Nested Trademark Tags</td>
+  <td><code>&lt;sup&gt;</code> tags incorrectly nested inside each other around the ® symbol — e.g. <code>&lt;sup&gt;&lt;sup&gt;®&lt;/sup&gt;&lt;/sup&gt;</code>.</td>
+  <td>Use a single, correctly formatted <code>&lt;sup&gt;</code> tag.</td>
+</tr>
+<tr>
+  <td class="check-title">Invalid Background Image Source</td>
+  <td>CSS background images set via <code>background-image: url(...)</code> that are not hosted on <code>https://explore.redhat.com/</code>.</td>
+  <td>Move background images to the approved CDN.</td>
+</tr>
+</tbody>
+</table>
+</section>
+
+<!-- ─────────────────────────────────────── WARNING CHECKS ── -->
+<section id="checks-warnings" class="anchor-target">
+<h2 class="section-title">All checks — Warnings</h2>
+<div class="divider"></div>
+<p>Warnings indicate best-practice violations. The email can technically be sent, but these issues may degrade the recipient experience for some users or email clients.</p>
+
+<table class="check-table">
+<thead><tr><th style="width:32%">Check name</th><th>What it detects &amp; why it matters</th></tr></thead>
+<tbody>
+<tr><td class="check-title">Inline CSS Required</td><td>Non-empty <code>&lt;style&gt;</code> blocks in the <code>&lt;head&gt;</code>. Gmail and many mobile clients strip the <code>&lt;style&gt;</code> block entirely, so any styles defined there disappear. All CSS must be applied as inline <code>style=""</code> attributes.</td></tr>
+<tr><td class="check-title">Unsupported Media Elements</td><td><code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> elements. Not supported in the majority of email clients. They are either stripped silently or replaced with a broken placeholder.</td></tr>
+<tr><td class="check-title">Inaccessible Links</td><td>Anchor tags with no visible text, no <code>aria-label</code>, and no image with a meaningful <code>alt</code> attribute. Screen readers cannot announce what these links do, making the email inaccessible to blind and visually impaired users.</td></tr>
+<tr><td class="check-title">Empty href Attributes</td><td>Links with <code>href=""</code>. These resolve to the current page (the email itself) and are almost always a templating error.</td></tr>
+<tr><td class="check-title">Links without target="_blank"</td><td>External links that do not open in a new tab. When a recipient clicks a link in an email client and the page opens in the same window, it can close or navigate away from the email client, which is disorienting.</td></tr>
+<tr><td class="check-title">Links missing rel="noopener noreferrer"</td><td>Links with <code>target="_blank"</code> that lack <code>rel="noopener noreferrer"</code>. Without this, the opened page gains access to your page via <code>window.opener</code>, a security vulnerability.</td></tr>
+<tr><td class="check-title">Invalid Link Color</td><td>Link text colours other than the two approved brand colours: <code>#EE0000</code> (Red Hat red) and <code>#0066CC</code> (Red Hat blue). Image-only links are exempt from this check.</td></tr>
+<tr><td class="check-title">Links with title="null"</td><td>The literal string <code>title="null"</code> on a link. This is a common templating bug where a variable that was supposed to contain a title was never populated.</td></tr>
+<tr><td class="check-title">Invalid Font Family</td><td>Text rendered in fonts other than the approved brand fonts: <code>Red Hat Text</code>, <code>Red Hat Display</code>, or <code>RedHatText-Regular</code>. Detected via the browser's computed style, which accounts for CSS inheritance.</td></tr>
+<tr><td class="check-title">Font Size Below Minimum</td><td>Text with an inline font size below 11px (in <code>px</code> or <code>pt</code> units). Text this small is unreadable on mobile devices. Note: <code>em</code> and <code>rem</code> units are relative and are not checked.</td></tr>
+<tr><td class="check-title">Low Line Height</td><td>Block-level text elements with a unitless or <code>em</code> line-height below 1.4. Tight line spacing makes text difficult to read, especially on mobile.</td></tr>
+<tr><td class="check-title">Unsupported CSS Properties</td><td>Inline style properties not supported by major email clients: <code>display:flex</code>, <code>display:grid</code>, <code>display:inline-flex</code>, <code>display:inline-grid</code>, <code>position:fixed</code>, <code>position:sticky</code>, <code>animation</code>, <code>transition</code>, <code>transform</code>.</td></tr>
+<tr><td class="check-title">CSS !important Usage</td><td><code>!important</code> in inline style attributes. Some email clients (particularly older versions of Outlook) may ignore or misinterpret it, causing unintended style overrides.</td></tr>
+<tr><td class="check-title">Broken / Placeholder Image Sources</td><td>Images with <code>src</code> pointing to known placeholder or development domains: <code>localhost</code>, <code>via.placeholder.com</code>, <code>picsum.photos</code>, <code>dummyimage.com</code>, and others. These indicate test images that were never replaced with production assets.</td></tr>
+<tr><td class="check-title">Spacer Images Detected</td><td>Images used as layout spacers: 1×1 pixel images, or images whose filename contains "spacer", "blank", or "clear.gif". These are an outdated technique. Use CSS padding and margins instead.</td></tr>
+<tr><td class="check-title">Relative src= URLs</td><td>Image, video, or source elements with relative <code>src</code> attributes (e.g. <code>/images/logo.png</code> or <code>../assets/photo.jpg</code>). These resolve relative to the email client's rendering context (usually <code>about:blank</code>) and will always produce broken images.</td></tr>
+<tr><td class="check-title">Email Width Violations</td><td>Table, TD, or div elements with an explicit width exceeding 640px. The safe maximum width for email layouts is 640px — wider than this breaks on common mobile screen widths.</td></tr>
+<tr><td class="check-title">Validate "Red Hat" Spacing</td><td>The brand name written as one word (<code>RedHat</code>) or with a regular space between the words. Brand guidelines require a non-breaking space (U+00A0, written as <code>&amp;nbsp;</code> in HTML) between "Red" and "Hat" so the name never wraps across a line break.</td></tr>
+<tr><td class="check-title">Placeholder (Dummy) Text</td><td>Lorem ipsum and related placeholder text keywords left in from the template. These include: lorem, ipsum, dolor, amet, consectetur, adipiscing, elit, nullam, aliquam, purus, iaculis, viverra, morbi, sollicitudin, convallis, curabitur, vestibulum.</td></tr>
+<tr><td class="check-title">Extra Whitespace</td><td>Multiple consecutive spaces in text content, or leading/trailing spaces in attribute values (e.g. <code>style="  padding: 20px"</code>). These can cause subtle rendering inconsistencies.</td></tr>
+<tr><td class="check-title">Commented-Out Code</td><td>HTML comments that appear to contain active code — tags, URLs, or <code>style=</code> attributes. Commented-out code adds file size, may contain outdated tracking URLs, and is a maintenance hazard.</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ─────────────────────────────────────── INFO CHECKS ── -->
+<section id="checks-info" class="anchor-target">
+<h2 class="section-title">All checks — Info</h2>
+<div class="divider"></div>
+<p>Info-level checks flag missing recommended elements. These are not errors, but they represent best practices that improve email client compatibility, accessibility, and legal compliance.</p>
+
+<table class="check-table">
+<thead><tr><th style="width:32%">Check name</th><th>What it detects &amp; why it matters</th></tr></thead>
+<tbody>
+<tr><td class="check-title">Missing lang Attribute</td><td>The <code>&lt;html&gt;</code> element has no <code>lang</code> attribute. Screen readers use the <code>lang</code> attribute to select the correct language for text-to-speech pronunciation. Example fix: <code>&lt;html lang="en"&gt;</code>.</td></tr>
+<tr><td class="check-title">Missing &lt;title&gt; Tag</td><td>No <code>&lt;title&gt;</code> element in the <code>&lt;head&gt;</code>. Some email clients display the title as a label or tab heading. It is also required for accessibility.</td></tr>
+<tr><td class="check-title">Missing &lt;meta charset&gt;</td><td>No character encoding declaration. Without <code>&lt;meta charset="UTF-8"&gt;</code>, special characters (accented letters, em dashes, trademark symbols) may render as garbled characters in some email clients.</td></tr>
+<tr><td class="check-title">Missing Viewport Meta Tag</td><td>No <code>&lt;meta name="viewport"&gt;</code> tag. Without it, some mobile email clients render the email at desktop width and require the user to zoom in.</td></tr>
+<tr><td class="check-title">Missing Preheader Text</td><td>No preheader element detected. A preheader is a short line of hidden text at the top of the email body that appears as the preview text in the inbox list view — the second line of text visible before the email is opened. Its absence means the inbox shows the first line of email content as the preview, which is often the alt text of a spacer image or a navigation link.</td></tr>
+<tr><td class="check-title">Missing Unsubscribe Link</td><td>No text matching common unsubscribe patterns: "unsubscribe", "opt-out", "manage preferences", "email preferences", "manage subscriptions". CAN-SPAM and GDPR require a clear opt-out mechanism in every commercial email.</td></tr>
+<tr><td class="check-title">Missing Physical Address</td><td>No street address or postal code detected in the email body. CAN-SPAM requires that every commercial email include the sender's valid physical address (street address, PO box, or private mailbox).</td></tr>
+</tbody>
+</table>
+</section>
+
+<!-- ─────────────────────────────────────── SC_CID ── -->
+<section id="sc-cid" class="anchor-target">
+<h2 class="section-title">Understanding sc_cid tracking</h2>
+<div class="divider"></div>
+<p>The <code>sc_cid</code> (Source Code Campaign ID) is a URL query parameter appended to every outbound link in a Red Hat marketing email. It tells the analytics platform which specific email campaign generated each click, enabling accurate attribution and ROI measurement.</p>
+
+<h3 class="sub-title">Correct format</h3>
+<pre><code>https://www.redhat.com/products/rhel?sc_cid=7013a000003SUdXAAW</code></pre>
+
+<p>The auditor checks each link against the sc_cid value you entered at the top of the page and reports six different failure modes:</p>
+
+<table class="check-table">
+<thead><tr><th>Failure type</th><th>Example URL</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>Missing</strong></td><td><code>https://redhat.com/products</code></td><td>No <code>sc_cid</code> parameter at all.</td></tr>
+<tr><td><strong>Empty</strong></td><td><code>?foo=bar&amp;sc_cid&amp;other=1</code></td><td>The parameter name is present but has no <code>=</code> sign and no value.</td></tr>
+<tr><td><strong>Wrong value</strong></td><td><code>?sc_cid=WRONG_VALUE</code></td><td>The parameter is present but the value does not match what you entered.</td></tr>
+<tr><td><strong>Duplicate</strong></td><td><code>?sc_cid=ABC&amp;sc_cid=ABC</code></td><td>The parameter appears twice. The analytics platform may only read one.</td></tr>
+<tr><td><strong>Malformed</strong></td><td><code>/path/sc_cid=ABC</code></td><td>The parameter is in the URL path, not the query string.</td></tr>
+<tr><td><strong>Relative URL</strong></td><td><code>?sc_cid=ABC</code></td><td>The link has no domain — it would resolve to whatever the email client is currently showing (usually nothing).</td></tr>
+</tbody>
+</table>
+
+<div class="callout tip">
+  <span class="callout-icon">✅</span>
+  <strong>Exempt links:</strong> The following links are excluded from sc_cid checking because they are standard footer links that do not require campaign tracking: the Red Hat privacy policy, contact page, preference centre, and official social media profiles (Facebook, X/Twitter, LinkedIn, YouTube).
+</div>
+
+<h3 class="sub-title">Case sensitivity</h3>
+<p>The parameter name check is <strong>case-sensitive</strong>. <code>SC_CID=</code> or <code>Sc_Cid=</code> will be flagged as missing. The parameter must be lowercase <code>sc_cid</code>.</p>
+</section>
+
+<!-- ─────────────────────────────────────── TRADEMARK ── -->
+<section id="trademark" class="anchor-target">
+<h2 class="section-title">Trademark formatting rules</h2>
+<div class="divider"></div>
+<p>The registered trademark symbol ® must be marked up in a very specific way to prevent it from adding unwanted vertical spacing to the text line it appears on. This is one of the strictest checks in the auditor — only one exact form is accepted.</p>
+
+<h3 class="sub-title">The only accepted form</h3>
+<div class="trademark-box">
+<span class="label">Required (PASS)</span>
+<span class="pass">&lt;sup style="line-height:0;"&gt;&amp;reg;&lt;/sup&gt;</span>
+</div>
+
+<h3 class="sub-title">Everything else fails</h3>
+<div class="trademark-box">
+<span class="label">Fails — literal ® character, not &amp;reg; entity</span>
+<span class="fail">&lt;sup style="line-height:0;"&gt;®&lt;/sup&gt;</span>
+<br><br>
+<span class="label">Fails — space after colon in line-height</span>
+<span class="fail">&lt;sup style="line-height: 0;"&gt;&amp;reg;&lt;/sup&gt;</span>
+<br><br>
+<span class="label">Fails — no trailing semicolon</span>
+<span class="fail">&lt;sup style="line-height:0"&gt;&amp;reg;&lt;/sup&gt;</span>
+<br><br>
+<span class="label">Fails — px unit added</span>
+<span class="fail">&lt;sup style="line-height:0px;"&gt;&amp;reg;&lt;/sup&gt;</span>
+<br><br>
+<span class="label">Fails — extra attribute on sup</span>
+<span class="fail">&lt;sup style="line-height:0;" class="tm"&gt;&amp;reg;&lt;/sup&gt;</span>
+<br><br>
+<span class="label">Fails — uppercase tag name</span>
+<span class="fail">&lt;SUP style="line-height:0;"&gt;&amp;reg;&lt;/SUP&gt;</span>
+<br><br>
+<span class="label">Fails — ® outside any sup tag</span>
+<span class="fail">Red Hat® Enterprise Linux</span>
+</div>
+
+<div class="callout info">
+  <span class="callout-icon">💡</span>
+  <strong>Why so strict?</strong> The DOM-based auditing approach (used for most other checks) cannot enforce this level of precision — the browser decodes <code>&amp;reg;</code>, <code>&#174;</code>, and the literal ® character to the same Unicode value before any JavaScript sees it. The trademark check scans the <strong>raw HTML string</strong> before browser parsing, which is the only way to enforce exact encoding and exact attribute formatting.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── SETTINGS ── -->
+<section id="settings" class="anchor-target">
+<h2 class="section-title">Settings panel</h2>
+<div class="divider"></div>
+<p>Click the <strong>Settings</strong> button in the top-right navbar to open the settings panel. Changes take effect immediately and are saved automatically in your browser's localStorage so they persist between sessions.</p>
+
+<h3 class="sub-title">Configuration values</h3>
+
+<div class="config-grid">
+  <div class="config-item">
+    <div class="config-key">Min Font Size</div>
+    <div class="config-val">Default: 11px</div>
+    <div class="config-desc">Text below this size (in px or pt) triggers a font-size warning. Applies only to px and pt units.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Min Line Height</div>
+    <div class="config-val">Default: 1.4</div>
+    <div class="config-desc">Unitless or em line-height values below this on block elements trigger a warning. Percentage values are not checked.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Max Email Width</div>
+    <div class="config-val">Default: 640px</div>
+    <div class="config-desc">Tables, TDs, or divs with an explicit width above this value are flagged. 640px is the recognised safe maximum for most inbox widths.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Required Image Prefix</div>
+    <div class="config-val">Default: https://explore.redhat.com/</div>
+    <div class="config-desc">All production images must be hosted at this URL prefix. Images from other domains will be flagged as policy violations.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Valid Fonts</div>
+    <div class="config-val">One per line</div>
+    <div class="config-desc">The approved brand font families. Text rendered in any other font will be flagged. Values must match the font-family name exactly as returned by getComputedStyle.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Valid Link Colors</div>
+    <div class="config-val">HEX only, one per line</div>
+    <div class="config-desc">Only HEX format (#RRGGBB or #RGB) is accepted. RGB format is rejected because older email engines do not support it. Default: #EE0000 and #0066CC.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Ignored Link Prefixes</div>
+    <div class="config-val">One per line</div>
+    <div class="config-desc">Links starting with any of these prefixes are exempt from sc_cid, link colour, and security checks. Used for standard footer links.</div>
+  </div>
+  <div class="config-item">
+    <div class="config-key">Enable / Disable Checks</div>
+    <div class="config-val">Toggle switches</div>
+    <div class="config-desc">Turn individual checks on or off. Disabled checks show a grey "Disabled" badge in results and are excluded from PDF exports. A warning banner appears when any check is disabled.</div>
+  </div>
+</div>
+
+<div class="callout warn">
+  <span class="callout-icon">⚠</span>
+  <strong>Disabling checks for convenience is strongly discouraged.</strong> Each check exists for a specific business or technical reason. Disabling a check to make a report look cleaner means the underlying problem goes undetected — and may reach recipients. If a check seems incorrect for your use case, reconfigure its thresholds rather than disabling it.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── REFACTOR ── -->
+<section id="refactor" class="anchor-target">
+<h2 class="section-title">Refactor tool</h2>
+<div class="divider"></div>
+<p>The <strong>Refactor Code</strong> button at the bottom of the left column appears once the audit has found issues. Clicking it automatically applies a set of safe, deterministic fixes to your HTML and displays the corrected code in a modal dialog.</p>
+
+<h3 class="sub-title">What gets fixed automatically</h3>
+<ul class="doc-list">
+  <li><strong>Duplicate attributes</strong> — the duplicate attribute is removed, keeping the first occurrence.</li>
+  <li><strong>Insecure links</strong> — <code>http://</code> is upgraded to <code>https://</code>.</li>
+  <li><strong>Missing target="_blank"</strong> — added to all external links.</li>
+  <li><strong>Missing rel="noopener noreferrer"</strong> — appended to the rel attribute, preserving existing values.</li>
+  <li><strong>Links with title="null"</strong> — the title attribute is removed.</li>
+  <li><strong>Image link decoration</strong> — <code>text-decoration:none</code> is applied to links wrapping images.</li>
+  <li><strong>Image attributes</strong> — hygiene inline styles applied to all images.</li>
+  <li><strong>Table accessibility</strong> — missing <code>border="0"</code> and <code>role="presentation"</code> added.</li>
+  <li><strong>sc_cid parameter</strong> — wrong, missing, empty, or duplicate parameters corrected to the value you entered.</li>
+  <li><strong>Trademark normalisation</strong> — stray ® symbols and incorrectly nested <code>&lt;sup&gt;</code> tags restructured.</li>
+  <li><strong>Red Hat spacing</strong> — replaces regular spaces in "Red Hat" with non-breaking spaces.</li>
+</ul>
+
+<div class="callout danger">
+  <span class="callout-icon">🚨</span>
+  <strong>Always review the refactored code before using it.</strong> The refactor tool makes conservative, mechanical changes. It does not understand your email's intent. Review the diff view (click the "Diff View" tab in the refactor modal) to see exactly what changed, then copy the corrected code into your email platform for further testing.
+</div>
+
+<h3 class="sub-title">Diff view</h3>
+<p>The refactor modal has two tabs: <strong>Refactored Code</strong> (the full corrected HTML) and <strong>Diff View</strong> (a line-level comparison showing added lines in green and removed lines in red strikethrough). Use the diff view to quickly understand what the refactorer changed without reading through the entire HTML.</p>
+</section>
+
+<!-- ─────────────────────────────────────── PDF EXPORT ── -->
+<section id="pdf-export" class="anchor-target">
+<h2 class="section-title">PDF export</h2>
+<div class="divider"></div>
+<p>Click <strong>Export PDF</strong> in the summary bar to download a formatted audit report as a PDF file. The PDF is generated entirely in the browser using the jsPDF library and downloads immediately — no popup, no print dialog.</p>
+
+<h3 class="sub-title">What the PDF contains</h3>
+<ul class="doc-list">
+  <li>Report title, generation date, and the sc_cid value that was audited</li>
+  <li>A summary row with counts for Errors, Warnings, Info issues, and Passed checks</li>
+  <li>One section per audit check, colour-coded by severity</li>
+  <li>A table of issues for each failing check, with truncated cell values for long URLs and snippets</li>
+  <li>Page numbers and a footer on every page</li>
+</ul>
+
+<p><strong>Disabled checks are excluded from the PDF.</strong> If you have turned off any checks in Settings, they will not appear in the exported report. Enable all checks before exporting a final report for sign-off.</p>
+
+<div class="callout tip">
+  <span class="callout-icon">✅</span>
+  <strong>Tip:</strong> Export the PDF <em>after</em> fixing all issues and re-running the audit. A clean report showing all checks passed serves as documented evidence of your pre-send QA process.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── PREVIEW ── -->
+<section id="preview" class="anchor-target">
+<h2 class="section-title">Live preview</h2>
+<div class="divider"></div>
+<p>Click <strong>Show Preview</strong> in the navbar to open a live rendered preview of your email directly below the HTML input area. The preview updates automatically each time the audit re-runs (i.e. each time you change the HTML).</p>
+<p>The preview is rendered in a sandboxed iframe — it shows exactly what the email's HTML looks like when parsed by the browser. This is useful for visual verification alongside the audit results.</p>
+<p>When you click on a row in a failure table that supports element highlighting, the preview pane opens automatically and draws a red outline around the specific element that caused the failure. This lets you visually locate the problem in the rendered email rather than hunting through the source code.</p>
+
+<div class="callout info">
+  <span class="callout-icon">💡</span>
+  The live preview renders in your browser engine, not in an email client. It will not show Outlook-specific rendering issues. Use the preview for quick visual checks only; always test in real email clients before sending.
+</div>
+</section>
+
+<!-- ─────────────────────────────────────── CONFIG REF ── -->
+<section id="config-ref" class="anchor-target">
+<h2 class="section-title">Default configuration reference</h2>
+<div class="divider"></div>
+<p>The following are the default values as shipped. All can be changed in the Settings panel.</p>
+
+<pre>
+<span class="cm">// config.js — version 1.1.0</span>
+{
+  <span class="at">parameterName</span>:        <span class="st">'sc_cid'</span>,
+
+  <span class="at">requiredImagePrefix</span>:  <span class="st">'https://explore.redhat.com/'</span>,
+
+  <span class="at">validFonts</span>: [
+    <span class="st">'RedHatText-Regular'</span>,
+    <span class="st">'Red Hat Text'</span>,
+    <span class="st">'Red Hat Display'</span>,
+  ],
+
+  <span class="at">validLinkColors</span>: [
+    <span class="st">'#ee0000'</span>,   <span class="cm">// Red Hat red</span>
+    <span class="st">'#0066cc'</span>,   <span class="cm">// Red Hat blue</span>
+  ],
+
+  <span class="at">minFontSize</span>:           <span class="vl">11</span>,     <span class="cm">// px</span>
+  <span class="at">minLineHeight</span>:         <span class="vl">1.4</span>,   <span class="cm">// unitless multiplier</span>
+  <span class="at">maxEmailWidth</span>:         <span class="vl">640</span>,   <span class="cm">// px</span>
+  <span class="at">gmailClipThreshold</span>:    <span class="vl">102400</span>, <span class="cm">// bytes (100 KB)</span>
+
+  <span class="at">unsupportedCssProperties</span>: [
+    <span class="st">'display:flex'</span>, <span class="st">'display:grid'</span>,
+    <span class="st">'display:inline-flex'</span>, <span class="st">'display:inline-grid'</span>,
+    <span class="st">'position:fixed'</span>, <span class="st">'position:sticky'</span>,
+    <span class="st">'animation'</span>, <span class="st">'transition'</span>, <span class="st">'transform'</span>,
+  ],
+
+  <span class="at">ignoreList</span>: [
+    <span class="cm">// Standard footer links exempt from sc_cid &amp; link checks:</span>
+    <span class="st">'https://www.redhat.com/en/about/privacy-policy'</span>,
+    <span class="st">'https://www.redhat.com/en/contact'</span>,
+    <span class="st">'https://www.redhat.com/en/preferences'</span>,
+    <span class="st">'https://www.facebook.com/RedHatInc/'</span>,
+    <span class="st">'https://x.com/RedHat'</span>,
+    <span class="st">'https://www.linkedin.com/company/red-hat'</span>,
+    <span class="st">'https://www.youtube.com/user/RedHatVideos'</span>,
+    <span class="st">'https://explore.redhat.com/index.php/email/emailWebview'</span>,
+  ],
+}
+</pre>
+</section>
+
+<!-- ─────────────────────────────────────── FAQ ── -->
+<section id="faq" class="anchor-target">
+<h2 class="section-title">Frequently asked questions</h2>
+<div class="divider"></div>
+
+<h3 class="sub-title">Why does nothing happen when I type the sc_cid?</h3>
+<p>The HTML input field is locked until a sc_cid value is entered. Once you type any value into the sc_cid field, the HTML textarea becomes active and you can paste or upload your email code.</p>
+
+<h3 class="sub-title">The audit says a link has the wrong sc_cid value. Is that right?</h3>
+<p>The auditor compares every link's sc_cid parameter against the value you entered in the sc_cid field at the top. If a link was built for a different campaign (e.g. it uses last month's campaign ID), it will be flagged as "Wrong Value". Check the link URL in the results table to confirm.</p>
+
+<h3 class="sub-title">Why does my image fail even though it's hosted on explore.redhat.com?</h3>
+<p>Image policy violations can trigger for multiple reasons at once: even if the source is correct, the check also requires a non-null <code>alt</code> attribute, explicit <code>width</code> and <code>height</code> attributes, and <code>border="0"</code>. Expand the failure row to see the specific reason listed for each image.</p>
+
+<h3 class="sub-title">Can I use &reg; or &#174; instead of &amp;reg; for the trademark?</h3>
+<p>No. Only <code>&amp;reg;</code> is accepted as the trademark content inside the <code>&lt;sup&gt;</code> tag. The reason is that the auditor checks the <em>raw HTML string</em> — not the browser's interpretation of it — to enforce the exact canonical form. The literal ® character and numeric entity forms (&#174;, &#xAE;) will fail.</p>
+
+<h3 class="sub-title">What does "Body Only" mode do differently?</h3>
+<p>In Body Only mode, the auditor wraps your HTML fragment in a minimal document shell (<code>&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;…&lt;/body&gt;&lt;/html&gt;</code>) before auditing. This prevents false structural errors from the missing document wrapper. Checks for <code>&lt;meta charset&gt;</code>, viewport meta, <code>&lt;title&gt;</code>, and <code>lang</code> attribute will always trigger in Body Only mode since those belong in the <code>&lt;head&gt;</code>.</p>
+
+<h3 class="sub-title">The app froze for a few seconds when I dropped a large file. Is that normal?</h3>
+<p>Yes. For files over 200 KB a status message appears explaining that a large file is being processed. JavaScript in browsers runs on a single thread, so auditing a large document takes exclusive use of the CPU for a short period. The status message and spinner confirm that the app is working, not crashed. The audit will complete and results will appear shortly.</p>
+
+<h3 class="sub-title">Why is the live preview different from how the email looks in Outlook?</h3>
+<p>The live preview renders in your browser (Chrome, Firefox, etc.). Outlook uses a completely different rendering engine (Microsoft Word's HTML renderer in desktop versions). CSS that works in your browser may look entirely different in Outlook. The live preview is for quick visual checks only — always test in actual email clients.</p>
+
+<h3 class="sub-title">My settings disappeared after I cleared my browser cache.</h3>
+<p>Settings are stored in the browser's localStorage. Clearing browser data (cache, cookies, local storage) removes them. The auditor resets to its default configuration. Re-enter your custom settings in the Settings panel.</p>
+</section>
+
+<!-- ─────────────────────────────────────── GLOSSARY ── -->
+<section id="glossary" class="anchor-target">
+<h2 class="section-title">Glossary</h2>
+<div class="divider"></div>
+<table class="check-table">
+<thead><tr><th style="width:22%">Term</th><th>Definition</th></tr></thead>
+<tbody>
+<tr><td><strong>sc_cid</strong></td><td>Source Code Campaign ID. A URL query parameter appended to outbound links in marketing emails to track campaign attribution in analytics systems.</td></tr>
+<tr><td><strong>CAN-SPAM</strong></td><td>Controlling the Assault of Non-Solicited Pornography And Marketing Act (US). Requires commercial emails to include a valid physical address, a clear opt-out mechanism, and honest subject lines, among other requirements.</td></tr>
+<tr><td><strong>GDPR</strong></td><td>General Data Protection Regulation (EU). Requires consent for email marketing and the ability for recipients to withdraw that consent (unsubscribe) at any time.</td></tr>
+<tr><td><strong>Inline CSS</strong></td><td>CSS styles written directly in an element's <code>style=""</code> attribute, rather than in a <code>&lt;style&gt;</code> block or external stylesheet. Required in email because many clients strip external styles.</td></tr>
+<tr><td><strong>Preheader</strong></td><td>A short line of text at the very top of the email body, typically hidden from view but visible in the inbox preview pane as the second line of text after the subject line.</td></tr>
+<tr><td><strong>Sandbox iframe</strong></td><td>An isolated browser frame used by the auditor to parse and render the email's HTML without it affecting the auditor's own page. DOM-based checks run inside this frame.</td></tr>
+<tr><td><strong>DOM</strong></td><td>Document Object Model. The browser's internal representation of an HTML document as a tree of objects. After the browser parses HTML, JavaScript interacts with the DOM rather than the raw text.</td></tr>
+<tr><td><strong>Entity</strong></td><td>An HTML escape code for characters that have special meaning or are not easily typed. <code>&amp;reg;</code> is the entity for ®, <code>&amp;amp;</code> for &amp;, <code>&amp;nbsp;</code> for a non-breaking space.</td></tr>
+<tr><td><strong>Non-breaking space</strong></td><td>A space character (U+00A0, written as <code>&amp;nbsp;</code>) that prevents word-wrapping at that position. Used between "Red" and "Hat" so the brand name never splits across two lines.</td></tr>
+<tr><td><strong>LocalStorage</strong></td><td>A browser API that stores key-value data persistently within the browser, tied to the current domain. Used by the auditor to save Settings and theme preferences between sessions.</td></tr>
+<tr><td><strong>MSO conditional</strong></td><td>HTML comment syntax (<code>&lt;!--[if mso]&gt;...&lt;![endif]--&gt;</code>) interpreted only by Microsoft Outlook. Used to provide Outlook-specific CSS or layout overrides invisible to other clients.</td></tr>
+<tr><td><strong>Severity</strong></td><td>A classification of how serious an audit finding is. Three levels: Error (must fix), Warning (should fix), Info (consider fixing).</td></tr>
+</tbody>
+</table>
+</section>
+
+</main>
+</div>
+
+<footer>
+<p>Red Hat Email Auditor v1.1.0 — Process &amp; Reference Guide</p>
+<p>For internal use. All audits run client-side; no data is transmitted.</p>
+</footer>
+
+<script>
+// ── Scroll-spy: highlight active section in sidebar ──────────────────────
+(function() {
+const links = document.querySelectorAll('#toc-nav a');
+const sections = Array.from(links).map(l => document.querySelector(l.getAttribute('href'))).filter(Boolean);
+function onScroll() {
+    let current = sections[0];
+    sections.forEach(s => { if (s.getBoundingClientRect().top <= 80) current = s; });
+    links.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current.id);
+    });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+})();
+</script>
 </body>
 </html>
