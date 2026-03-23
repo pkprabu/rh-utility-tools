@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-body { font-family: 'Red Hat Text', Helvetica, Arial, sans-serif; padding-top: 5rem; }
+body { font-family: 'Red Hat Text', Helvetica, Arial, sans-serif; padding-top: 0; }
 h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-serif; }
 .navbar .container-fluid { padding-right: 2rem; padding-left: 2rem; }
 .navbar { border-bottom: 1px solid #495057; }
@@ -26,16 +26,6 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-
 }
 
 /* ── Heading — exact copy from portfolio ── */
-.section-label {
-  font-family: 'Red Hat Mono', monospace;
-  font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
-  color: #ee3a2f; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 14px;
-}
-.section-label::after {
-  content: ''; flex: 1; height: 1px;
-  background: #2c2c2c; max-width: 120px;
-}
 .section-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(3rem, 6vw, 5rem);
@@ -47,9 +37,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-
   max-width: 560px; line-height: 1.75;
   margin-bottom: 0;
 }
-[data-bs-theme="light"] .section-label { color: #ee3a2f; }
-[data-bs-theme="light"] .section-label::after { background: #dee2e6; }
-[data-bs-theme="light"] .section-title { color: #111; }
+[data-bs-theme="light"] [data-bs-theme="light"] [data-bs-theme="light"] .section-title { color: #111; }
 [data-bs-theme="light"] .section-sub { color: #555; }
 
 /* ── About grid — exact copy from portfolio ── */
@@ -84,8 +72,8 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-
 .about-tag {
   font-family: 'Red Hat Mono', monospace;
   font-size: 0.68rem; padding: 5px 13px;
-  border: 1px solid #3a3a3a; border-radius: 0.25rem;
-  color: #a8a29c; letter-spacing: 0.04em;
+  border: 1px solid #5a5a5a; border-radius: 0.25rem;
+  color: #d0ccc7; letter-spacing: 0.04em;
   transition: border-color 0.15s, color 0.15s; cursor: default;
 }
 .about-tag:hover { border-color: #ee3a2f; color: #dedad4; }
@@ -110,7 +98,7 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-
 [data-bs-theme="light"] .about-content p strong { color: #111; }
 [data-bs-theme="light"] .about-photo img { border-color: #dee2e6; filter: none; }
 [data-bs-theme="light"] .about-photo-accent { border-color: #dee2e6; }
-[data-bs-theme="light"] .about-tag { border-color: #dee2e6; color: #777; }
+[data-bs-theme="light"] [data-bs-theme="light"] .about-tag { border-color: #adb5bd; color: #333; }
 [data-bs-theme="light"] .about-tag:hover { border-color: #ee3a2f; color: #111; }
 [data-bs-theme="light"] .cert-badge { border-color: #dee2e6; }
 [data-bs-theme="light"] .cert-badge-text span { color: #555; }
@@ -120,59 +108,35 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Red Hat Display', Helvetica, Arial, sans-
   .about-photo-accent { display: none; }
   .about-wrap { padding: 1.5rem 1rem 3rem; }
 }
+.author-byline {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-top: 1rem;
+}
+.author-name {
+  font-family: 'Red Hat Display', sans-serif;
+  font-weight: 700; font-size: 1.05rem; color: #fff;
+}
+.author-desig {
+  font-family: 'Red Hat Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.06em;
+  color: #ee3a2f; text-transform: uppercase;
+}
+.author-desig::before { content: '—'; margin-right: 0.5rem; color: #444; }
+[data-bs-theme="light"] .author-name { color: #111; }
+[data-bs-theme="light"] .author-desig { color: #ee3a2f; }
 </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-<div class="container-fluid">
-<a class="navbar-brand" href="#">UT <span class="badge version-badge text-bg-secondary">v1.1.0</span></a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarContent">
-<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-<li class="nav-item"><a class="nav-link" href="./index.html">Email Auditor</a></li>
-<li class="nav-item"><a class="nav-link active" aria-current="page" href="#">About the Author</a></li>
-<li class="nav-item"><a class="nav-link" href="../schedule-generator/index.html">Schedule Generator</a></li>
-<li class="nav-item"><a class="nav-link" href="../decimal-time-converter/index.html">Decimal Time Converter</a></li>
-</ul>
-<div class="d-flex gap-2 align-items-center">
-<button class="btn btn-sm btn-outline-secondary" id="preview-toggle-btn" type="button">Show Preview</button>
-<button class="btn btn-sm btn-outline-secondary" id="settings-btn" type="button">Settings</button>
-<button class="btn btn-sm btn-outline-secondary" id="theme-toggle-btn" type="button">Light Mode</button>
-<a href="./process-document.html"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="btn btn-sm btn-outline-secondary"
-   title="Process &amp; Reference Guide"
-   aria-label="Open process and reference guide">
-  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"/>
-  </svg>
-</a>
-<a href="./author.html"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="btn btn-sm btn-outline-secondary"
-   title="About the Author"
-   aria-label="Open author page"
-   id="profile-link">
-  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-  </svg>
-</a>
-</div>
-</div>
-</div>
-</nav>
 
 <div class="about-wrap">
 
-  <div class="section-label">About the Author</div>
   <h2 class="section-title">The Person<br>Behind the Work</h2>
-  <p class="section-sub">Senior Engineer who builds marketing systems, automates the complex, and makes every campaign measurable.</p>
+  <div class="author-byline">
+    <span class="author-name">Prabu Perumal</span>
+    <span class="author-desig">Senior Engineer | Technology</span>
+  </div>
+  <p class="section-sub">Builds marketing systems, automates the complex, and makes every campaign measurable.</p>
 
   <div class="about-grid">
     <div class="about-photo">
